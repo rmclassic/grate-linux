@@ -193,6 +193,15 @@
 		cd-gpios = <&gpio TEGRA_GPIO(I, 5) GPIO_ACTIVE_LOW>;
 		wp-gpios = <&gpio TEGRA_GPIO(T, 3) GPIO_ACTIVE_HIGH>;
 	};
+	
+	/* WIFI SDIO - SDMMC-3 */
+	mmc@78000400 {
+		status = "okay";
+		bus-width = <4>;
+		non-removable;
+		disable-wp;
+		no-1-8-v;
+	};
 
 	/* internal 32/64GB eMMC - SDMMC-4 */
 	mmc@78000600 {
