@@ -1,0 +1,18 @@
+// SPDX-License-Identifier: GPL-2.0
+
+/dts-v1/;
+
+#include <dt-bindings/input/input.h>
+#include "tegra30.dtsi"
+
+/ {
+	model = "Microsoft Surface RT 2";
+	compatible = "microsoft,surface-rt-2", "nvidia,tegra114";
+
+	/* clock from PMIC */
+	clk32k_in: clock@0 {
+		compatible = "fixed-clock";
+		clock-frequency = <32768>;
+		#clock-cells = <0>;
+	};
+};
