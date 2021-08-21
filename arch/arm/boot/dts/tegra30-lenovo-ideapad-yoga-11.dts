@@ -9,11 +9,32 @@
 	model = "Lenovo IdeaPad Yoga 11";
 	compatible = "lenovo,ideapad-yoga-11", "nvidia,tegra30";
 	
+	aliases {
+		mmc1 = &sdmmc1; /* uSD slot */
+	};
+	
 	/* clock from PMIC */
 	clk32k_in: clock@0 {
 		compatible = "fixed-clock";
 		clock-frequency = <32768>;
 		#clock-cells = <0>;
+	};
+	
+	mmc@78000000 {
+		status = "okay";
+		vqmmc-supply = <&ldo5_reg>;
+		bus-width = <4>;
+		power-gpios = <&gpio TEGRA_GPIO(D, 7) GPIO_ACTIVE_HIGH>;
+		cd-gpios = <&gpio TEGRA_GPIO(I, 5) GPIO_ACTIVE_LOW>;
+		//wp-gpios = <&gpio TEGRA_GPIO(T, 3) GPIO_ACTIVE_HIGH>;
+	};
+
+	ldo5_reg: tps65911-ldo5 {
+		compatible = "regulator-fixed";
+		regulator-name = "vddio_sdmmc";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		regulator-always-on;
 	};
 	
 	pinmux@70000868 {
