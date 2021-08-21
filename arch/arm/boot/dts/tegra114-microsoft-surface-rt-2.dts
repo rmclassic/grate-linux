@@ -15,4 +15,13 @@
 		clock-frequency = <32768>;
 		#clock-cells = <0>;
 	};
+	
+	usb@7d008000 {
+        status = "okay";
+        dr_mode = "peripheral";
+    };
+
+    usb-phy@7d008000 {
+        status = "okay";
+    };
 };
