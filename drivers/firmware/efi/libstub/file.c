@@ -84,6 +84,75 @@ static efi_status_t efi_open_volume(efi_loaded_image_t *image,
 	return status;
 }
 
+
+/**
+ * efi_open_read_cmdline_from_file() - Parse EFI command line options from file
+ * @image:	kernel image handle
+ *
+ * Return:	status code
+ */
+efi_status_t efi_open_read_cmdline_from_file(efi_loaded_image_t *image, int *size)
+{
+	efi_file_protocol_t *volume = NULL;
+	efi_file_protocol_t *file;
+	struct finfo fi;
+	efi_status_t status;
+	int t = 0;
+
+	const efi_char16_t st_filename[] = {
+		0x63, 0x6d,
+		0x64, 0x2e,
+		0x63, 0x6f,
+		0x6e, 0x66,
+		0x00};
+
+
+  memcpy(fi.filename, st_filename, 18);
+
+	status = efi_open_volume(image, &volume);
+	if (status != EFI_SUCCESS)
+		return status;
+
+
+	efi_info("Reading cmdline parameters from file: %ls\n", fi.filename);
+
+	status = efi_open_file(volume, &fi, &file, (unsigned long*)size);
+	if (status != EFI_SUCCESS)
+		goto err_close_volume;
+
+	status = efi_bs_call(allocate_pool, EFI_LOADER_DATA, sizeof(*size * 2),
+			     (void **)&image->load_options);
+ 	if (status != EFI_SUCCESS)
+		goto err_close_volume;
+
+	status = file->read(file, (unsigned long*)size, image->load_options);
+	if (status != EFI_SUCCESS) {
+		efi_err("Failed to read file\n");
+		goto err_on_read_file;
+	}
+
+	int curr;
+	for (curr = *size; curr > 0; curr--)
+	{
+		((u8*)image->load_options)[curr * 2] = ((u8*)image->load_options)[curr];
+		((u8*)image->load_options)[(curr * 2) - 1] = '\0';
+	}
+
+	*size *= 2;
+	image->load_options_size = *size;
+	efi_info("cmdline: %ls\n", image->load_options);
+	file->close(file);
+
+	return EFI_SUCCESS;
+
+
+err_on_read_file:
+	file->close(file);
+
+err_close_volume:
+	return EFI_NOT_FOUND;
+}
+
 static int find_file_option(const efi_char16_t *cmdline, int cmdline_len,
 			    const efi_char16_t *prefix, int prefix_size,
 			    efi_char16_t *result, int result_len)

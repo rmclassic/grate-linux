@@ -162,12 +162,10 @@ efi_status_t __efiapi efi_pe_entry(efi_handle_t handle,
 
 	/*
 	* Load cmdline parameters from file if CONFIG_CMDLINE_FROM_FILE was enabled.
-	* the filename is hardcoded as cmd.param and should be located at the same partition as kernel
+	* the filename is hardcoded as cmd.conf and should be located at the same partition as kernel
 	*/
 
-	//CHECK FOR CONFIG THEN
-	efi_info("WOW THIS IS IT");
-	status = efi_read_cmdline_from_file(image);
+	status = efi_read_cmdline_from_file(image, &cmdline_size);
 	if (status != EFI_SUCCESS) {
 		efi_err("Unable to read cmdline parameters from file\n");
 		goto fail;

@@ -17,6 +17,12 @@
 #include <asm/setup.h>
 
 #include "efistub.h"
+#define MAX_FILENAME_SIZE	256
+
+struct finfo {
+	efi_file_info_t info;
+	efi_char16_t	filename[MAX_FILENAME_SIZE];
+};
 
 bool efi_nochunk;
 bool efi_nokaslr = !IS_ENABLED(CONFIG_RANDOMIZE_BASE);
@@ -238,36 +244,6 @@ efi_status_t efi_parse_options(char const *cmdline)
 	return EFI_SUCCESS;
 }
 
-
-
-/**
- * efi_read_cmdline_from_file() - Parse EFI command line options from file
- * @image:	kernel image handle
- *
- * Return:	status code
- */
-efi_status_t efi_read_cmdline_from_file(efi_loaded_image_t *image)
-{
-	efi_file_protocol_t *volume = NULL;
-	efi_file_protocol_t *file;
-	struct finfo fi;
-	unsigned long size;
-	void *addr;
-
-	const efi_char16_t st_filename[] = {"cmdline.param"};
-
-	fi.filename = &st_filename;
-
-	status = efi_open_volume(image, &volume);
-	if (status != EFI_SUCCESS)
-		return status;
-
-	status = efi_open_file(volume, &fi, &file, &size);
-	if (status != EFI_SUCCESS)
-		goto err_close_volume;
-
-	err_close_volume:
-}
 
 /*
  * The EFI_LOAD_OPTION descriptor has the following layout:
