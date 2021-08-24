@@ -161,6 +161,7 @@ efi_status_t __efiapi efi_pe_entry(efi_handle_t handle,
 	}
 
 	/*
+<<<<<<< HEAD
 	* Load cmdline parameters from file if CONFIG_CMDLINE_FROM_FILE was enabled.
 	* the filename is hardcoded as cmd.conf and should be located at the same partition as kernel
 	*/
@@ -174,6 +175,8 @@ efi_status_t __efiapi efi_pe_entry(efi_handle_t handle,
 
 
 	/*
+=======
+>>>>>>> 5c979b6b6361363a615de6998414abe2b95e1a8f
 	 * Get the command line from EFI, using the LOADED_IMAGE
 	 * protocol. We are going to copy the command line into the
 	 * device tree, so this can be allocated anywhere.

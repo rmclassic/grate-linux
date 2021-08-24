@@ -84,6 +84,7 @@ static efi_status_t efi_open_volume(efi_loaded_image_t *image,
 	return status;
 }
 
+<<<<<<< HEAD
 
 /**
  * efi_open_read_cmdline_from_file() - Parse EFI command line options from file
@@ -153,6 +154,8 @@ err_close_volume:
 	return EFI_NOT_FOUND;
 }
 
+=======
+>>>>>>> 5c979b6b6361363a615de6998414abe2b95e1a8f
 static int find_file_option(const efi_char16_t *cmdline, int cmdline_len,
 			    const efi_char16_t *prefix, int prefix_size,
 			    efi_char16_t *result, int result_len)

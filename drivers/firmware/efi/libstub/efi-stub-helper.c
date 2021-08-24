@@ -17,12 +17,15 @@
 #include <asm/setup.h>
 
 #include "efistub.h"
+<<<<<<< HEAD
 #define MAX_FILENAME_SIZE	256
 
 struct finfo {
 	efi_file_info_t info;
 	efi_char16_t	filename[MAX_FILENAME_SIZE];
 };
+=======
+>>>>>>> 5c979b6b6361363a615de6998414abe2b95e1a8f
 
 bool efi_nochunk;
 bool efi_nokaslr = !IS_ENABLED(CONFIG_RANDOMIZE_BASE);
@@ -244,7 +247,10 @@ efi_status_t efi_parse_options(char const *cmdline)
 	return EFI_SUCCESS;
 }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 5c979b6b6361363a615de6998414abe2b95e1a8f
 /*
  * The EFI_LOAD_OPTION descriptor has the following layout:
  *	u32 Attributes;
