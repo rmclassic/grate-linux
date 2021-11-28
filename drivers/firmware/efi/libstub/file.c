@@ -12,7 +12,7 @@
 
 #include "efistub.h"
 
-#define MAX_FILENAME_SIZE	256
+#define MAX_FILENAME_SIZE	32
 
 /*
  * Some firmware implementations have problems reading files in one go.
@@ -84,9 +84,7 @@ static efi_status_t efi_open_volume(efi_loaded_image_t *image,
 	return status;
 }
 
-<<<<<<< HEAD
-
-/**
+/*
  * efi_open_read_cmdline_from_file() - Parse EFI command line options from file
  * @image:	kernel image handle
  *
@@ -98,17 +96,8 @@ efi_status_t efi_open_read_cmdline_from_file(efi_loaded_image_t *image, int *siz
 	efi_file_protocol_t *file;
 	struct finfo fi;
 	efi_status_t status;
-	int t = 0;
 
-	const efi_char16_t st_filename[] = {
-		0x63, 0x6d,
-		0x64, 0x2e,
-		0x63, 0x6f,
-		0x6e, 0x66,
-		0x00};
-
-
-  memcpy(fi.filename, st_filename, 18);
+  strcpy(fi.filename, L"cmd.conf");
 
 	status = efi_open_volume(image, &volume);
 	if (status != EFI_SUCCESS)
@@ -121,26 +110,23 @@ efi_status_t efi_open_read_cmdline_from_file(efi_loaded_image_t *image, int *siz
 	if (status != EFI_SUCCESS)
 		goto err_close_volume;
 
-	status = efi_bs_call(allocate_pool, EFI_LOADER_DATA, sizeof(*size * 2),
-			     (void **)&image->load_options);
+	char *file_data = NULL;
+	status = efi_bs_call(allocate_pool, EFI_LOADER_DATA, sizeof(*size),
+			     (void **)&file_data);
  	if (status != EFI_SUCCESS)
 		goto err_close_volume;
 
-	status = file->read(file, (unsigned long*)size, image->load_options);
+	status = file->read(file, (unsigned long*)size, file_data);
 	if (status != EFI_SUCCESS) {
 		efi_err("Failed to read file\n");
 		goto err_on_read_file;
 	}
 
-	int curr;
-	for (curr = *size; curr > 0; curr--)
-	{
-		((u8*)image->load_options)[curr * 2] = ((u8*)image->load_options)[curr];
-		((u8*)image->load_options)[(curr * 2) - 1] = '\0';
-	}
 
-	*size *= 2;
-	image->load_options_size = *size;
+	image->load_options_size = swprintf(image->load_options, L"%hs", file_data);
+	if (image->load_options_size < 0)
+		goto err_on_read_file;
+
 	efi_info("cmdline: %ls\n", image->load_options);
 	file->close(file);
 
@@ -154,8 +140,6 @@ err_close_volume:
 	return EFI_NOT_FOUND;
 }
 
-=======
->>>>>>> 5c979b6b6361363a615de6998414abe2b95e1a8f
 static int find_file_option(const efi_char16_t *cmdline, int cmdline_len,
 			    const efi_char16_t *prefix, int prefix_size,
 			    efi_char16_t *result, int result_len)

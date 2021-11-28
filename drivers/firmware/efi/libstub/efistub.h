@@ -815,12 +815,7 @@ efi_status_t handle_cmdline_files(efi_loaded_image_t *image,
 				  unsigned long *load_addr,
 				  unsigned long *load_size);
 
-<<<<<<< HEAD
 efi_status_t efi_open_read_cmdline_from_file(efi_loaded_image_t *image, int *size);
-
-
-=======
->>>>>>> 5c979b6b6361363a615de6998414abe2b95e1a8f
 
 static inline efi_status_t efi_load_dtb(efi_loaded_image_t *image,
 					unsigned long *load_addr,
@@ -830,14 +825,11 @@ static inline efi_status_t efi_load_dtb(efi_loaded_image_t *image,
 				    ULONG_MAX, ULONG_MAX, load_addr, load_size);
 }
 
-<<<<<<< HEAD
 
 static inline efi_status_t efi_read_cmdline_from_file(efi_loaded_image_t *image, int *size) {
 	return efi_open_read_cmdline_from_file(image, size);
 }
 
-=======
->>>>>>> 5c979b6b6361363a615de6998414abe2b95e1a8f
 efi_status_t efi_load_initrd(efi_loaded_image_t *image,
 			     unsigned long *load_addr,
 			     unsigned long *load_size,
